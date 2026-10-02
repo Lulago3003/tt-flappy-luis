@@ -27,8 +27,15 @@ module tb ();
   wire VGND = 1'b0;
 `endif
 
-  // Replace tt_um_example with your module name:
-  tt_um_example user_project (
+  // VGA signals from the TinyVGA Pmod pinout
+  wire hsync = uo_out[7];
+  wire vsync = uo_out[3];
+  wire [1:0] red = {uo_out[0], uo_out[4]};
+  wire [1:0] green = {uo_out[1], uo_out[5]};
+  wire [1:0] blue = {uo_out[2], uo_out[6]};
+  wire sound = uio_out[7];
+
+  tt_um_lulago3003_flappy user_project (
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST
