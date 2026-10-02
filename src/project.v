@@ -46,8 +46,9 @@ module tt_um_lulago3003_flappy (
   wire hsync, vsync, video_active;
   wire [9:0] pix_x, pix_y;
   reg [5:0] color;  // {R, G, B}, 2 bits each, from the renderer below
+  reg [5:0] rgb;    // registered color, aligned with the registered sync signals
 
-  assign uo_out = {hsync, color[0], color[2], color[4], vsync, color[1], color[3], color[5]};
+  assign uo_out = {hsync, rgb[0], rgb[2], rgb[4], vsync, rgb[1], rgb[3], rgb[5]};
 
   hvsync_generator vga_sync_gen (
       .clk(clk),
@@ -302,6 +303,11 @@ module tt_um_lulago3003_flappy (
     end
   end
   assign hit_px = b_px[6] & p_px[6];
+
+  always @(posedge clk) begin
+    if (~rst_n) rgb <= 6'd0;
+    else rgb <= color;
+  end
 
   // ---------------------------------------------------------------------------
   // Bird sprite: 16x12 pixels drawn at 2x (32x24). Returns {opaque, color}.
